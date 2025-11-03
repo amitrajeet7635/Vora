@@ -1,4 +1,4 @@
-# Vora Backend - OAuth2 Authentication Platform
+# Vora - OAuth2 Authentication Platform
 
 A production-grade Node.js backend implementing **OAuth2 Authorization Code Flow with PKCE** for Google and Facebook authentication. Built with Express, MongoDB, and JWT for secure session management.
 
