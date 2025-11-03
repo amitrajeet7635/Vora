@@ -353,10 +353,10 @@ The app will fail to start if required env vars are missing. Check console outpu
 
 ```env
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/vora
-FRONTEND_URL=https://vora.app
-GOOGLE_CALLBACK_URL=https://api.vora.app/api/auth/callback/google
-FACEBOOK_CALLBACK_URL=https://api.vora.app/api/auth/callback/facebook
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/<appname>
+FRONTEND_URL=https://<appname>.app
+GOOGLE_CALLBACK_URL=https://api.<appname>.app/api/auth/callback/google
+FACEBOOK_CALLBACK_URL=https://api.<appname>.app/api/auth/callback/facebook
 ```
 
 ### Recommended Hosting
