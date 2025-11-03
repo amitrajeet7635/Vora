@@ -1,0 +1,139 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Light Mode */
+:root {
+  --color-bg: #F8FAFC;
+  --color-text: #1E293B;
+  --color-text-secondary: #64748B;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-accent: #14B8A6;
+  --color-accent-hover: #0D9488;
+  --color-accent-light: rgba(20, 184, 166, 0.2);
+  --color-hover: #F1F5F9;
+  --color-navbar-bg: rgba(248, 250, 252, 0.8);
+  --color-footer-text: #94A3B8;
+  --color-danger: #EF4444;
+  --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.08);
+  
+  /* OAuth Button Colors - Light Mode */
+  --color-google: #4285F4;
+  --color-google-hover: #357ae8;
+  --color-facebook: #4285F4;
+  --color-facebook-hover: #357ae8;
+}
+
+/* Dark Mode */
+.dark {
+  --color-bg: #0F172A;
+  --color-text: #F9FAFB;
+  --color-text-secondary: #9CA3AF;
+  --color-card: #1E293B;
+  --color-border: #4B5563;
+  --color-accent: #14B8A6;
+  --color-accent-hover: #0D9488;
+  --color-accent-light: rgba(20, 184, 166, 0.2);
+  --color-hover: #4B5563;
+  --color-navbar-bg: rgba(15, 23, 42, 0.8);
+  --color-footer-text: #9CA3AF;
+  --color-danger: #F87171;
+  color-scheme: dark;
+  
+  /* OAuth Button Colors - Dark Mode */
+  --color-google: #00C9A7;
+  --color-google-hover: #00B396;
+  --color-facebook: #00C9A7;
+  --color-facebook-hover: #00B396;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
+  transition: color 300ms ease-in-out;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  transition: background 300ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+  transition: background 300ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+input, textarea, select {
+  background-color: var(--color-card);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-secondary);
+  transition: color 300ms ease-in-out;
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-soft-dark {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Button transitions */
+button, a {
+  transition: all 300ms ease-in-out;
+}
+
+/* Card and element transitions */
+div, section, nav, header, footer {
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out;
+}
+
+/* Text transitions */
+p, span, label {
+  transition: color 300ms ease-in-out;
+}
+
+/* Icon transitions */
+svg {
+  transition: fill 300ms ease-in-out, stroke 300ms ease-in-out;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
