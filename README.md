@@ -34,28 +34,28 @@ A production-grade Node.js backend implementing **OAuth2 Authorization Code Flow
 
 ### 1. Clone the repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/amitrajeet7635/Vora.git
 cd Vora/backend
-\`\`\`
+```
 
 ### 2. Install dependencies
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 3. Configure environment variables
 
 Copy the example environment file:
 
-\`\`\`bash
+```bash
 cp .env.example .env
-\`\`\`
+```
 
-Edit \`.env\` with your configuration:
+Edit `.env` with your configuration:
 
-\`\`\`env
+```env
 # Server
 NODE_ENV=development
 PORT=5001
@@ -80,27 +80,19 @@ GOOGLE_CALLBACK_URL=http://localhost:5001/api/auth/callback/google
 FACEBOOK_APP_ID=your-facebook-app-id
 FACEBOOK_APP_SECRET=your-facebook-app-secret
 FACEBOOK_CALLBACK_URL=http://localhost:5001/api/auth/callback/facebook
-\`\`\`
+```
 
 ### 4. Start MongoDB
 
-Make sure MongoDB is running locally or update \`MONGODB_URI\` with your connection string.
+Make sure MongoDB is running locally or update `MONGODB_URI` with your connection string.
 
-\`\`\`bash
+```bash
 # Start MongoDB (macOS with Homebrew)
 brew services start mongodb-community
 
 # Or using Docker
 docker run -d -p 27017:27017 --name mongodb mongo:latest
-\`\`\`
-
-### 5. Seed the database (optional)
-
-\`\`\`bash
-npm run seed
-\`\`\`
-
-This creates mock users for testing.
+```
 
 ---
 
@@ -108,17 +100,17 @@ This creates mock users for testing.
 
 ### Development Mode
 
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
-The server will start on \`http://localhost:5001\` with auto-reload enabled.
+The server will start on `http://localhost:5001` with auto-reload enabled.
 
 ### Production Mode
 
-\`\`\`bash
+```bash
 npm start
-\`\`\`
+```
 
 ---
 
@@ -128,30 +120,30 @@ npm start
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | \`/api/auth/google\` | Initiate Google OAuth flow | No |
-| GET | \`/api/auth/facebook\` | Initiate Facebook OAuth flow | No |
-| GET | \`/api/auth/callback/google\` | Google OAuth callback | No |
-| GET | \`/api/auth/callback/facebook\` | Facebook OAuth callback | No |
-| POST | \`/api/auth/logout\` | Logout current session | Yes |
-| POST | \`/api/auth/unlink/:provider\` | Unlink OAuth provider | Yes |
+| GET | `/api/auth/google` | Initiate Google OAuth flow | No |
+| GET | `/api/auth/facebook` | Initiate Facebook OAuth flow | No |
+| GET | `/api/auth/callback/google` | Google OAuth callback | No |
+| GET | `/api/auth/callback/facebook` | Facebook OAuth callback | No |
+| POST | `/api/auth/logout` | Logout current session | Yes |
+| POST | `/api/auth/unlink/:provider` | Unlink OAuth provider | Yes |
 
 ### User Management
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | \`/api/user/me\` | Get current user profile | Yes |
-| PATCH | \`/api/user/me\` | Update user profile | Yes |
-| DELETE | \`/api/user/me\` | Delete user account | Yes |
-| GET | \`/api/user/sessions\` | Get active sessions | Yes |
-| DELETE | \`/api/user/sessions/:id\` | Revoke specific session | Yes |
-| POST | \`/api/user/sessions/revoke-all\` | Revoke all other sessions | Yes |
+| GET | `/api/user/me` | Get current user profile | Yes |
+| PATCH | `/api/user/me` | Update user profile | Yes |
+| DELETE | `/api/user/me` | Delete user account | Yes |
+| GET | `/api/user/sessions` | Get active sessions | Yes |
+| DELETE | `/api/user/sessions/:id` | Revoke specific session | Yes |
+| POST | `/api/user/sessions/revoke-all` | Revoke all other sessions | Yes |
 
 ### Health Check
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | \`/health\` | Server health check |
-| GET | \`/api\` | API version info |
+| GET | `/health` | Server health check |
+| GET | `/api` | API version info |
 
 ---
 
@@ -163,22 +155,22 @@ npm start
 2. Create a new project or select existing
 3. Enable Google+ API
 4. Create OAuth 2.0 credentials
-5. Add authorized redirect URI: \`http://localhost:5001/api/auth/callback/google\`
-6. Copy Client ID and Client Secret to \`.env\`
+5. Add authorized redirect URI: `http://localhost:5001/api/auth/callback/google`
+6. Copy Client ID and Client Secret to `.env`
 
 ### Facebook OAuth2
 
 1. Go to [Facebook Developers](https://developers.facebook.com/)
 2. Create a new app
 3. Add Facebook Login product
-4. Configure OAuth redirect URIs: \`http://localhost:5001/api/auth/callback/facebook\`
-5. Copy App ID and App Secret to \`.env\`
+4. Configure OAuth redirect URIs: `http://localhost:5001/api/auth/callback/facebook`
+5. Copy App ID and App Secret to `.env`
 
 ---
 
 ## 🏗️ Project Structure
 
-\`\`\`
+```
 backend/
 ├── src/
 │   ├── config/
@@ -210,7 +202,7 @@ backend/
 ├── seed.js                    # Database seeding
 ├── .env.example               # Environment template
 └── package.json
-\`\`\`
+```
 
 ---
 
@@ -248,18 +240,18 @@ backend/
 
 All authentication events are logged with correlation IDs for tracking:
 
-- \`LOGIN_SUCCESS\` - Successful authentication
-- \`LOGIN_FAILURE\` - Failed authentication attempt
-- \`LOGOUT\` - User logout
-- \`LINK_ACCOUNT\` - Provider linked to account
-- \`UNLINK_ACCOUNT\` - Provider unlinked
-- \`SESSION_INVALID\` - Invalid session detected
-- \`RATE_LIMIT_EXCEEDED\` - Rate limit violation
+- LOGIN_SUCCESS - Successful authentication
+- LOGIN_FAILURE - Failed authentication attempt
+- LOGOUT - User logout
+- LINK_ACCOUNT - Provider linked to account
+- UNLINK_ACCOUNT - Provider unlinked
+- SESSION_INVALID - Invalid session detected
+- RATE_LIMIT_EXCEEDED - Rate limit violation
 
 Logs are stored in:
-- \`logs/combined.log\` - All logs
-- \`logs/error.log\` - Error logs only
-- \`logs/exceptions.log\` - Uncaught exceptions
+- logs/combined.log - All logs
+- logs/error.log - Error logs only
+- logs/exceptions.log - Uncaught exceptions
 
 ---
 
@@ -268,26 +260,26 @@ Logs are stored in:
 ### Manual Testing with cURL
 
 **Health Check:**
-\`\`\`bash
+```bash
 curl http://localhost:5001/health
-\`\`\`
+```
 
 **Initiate Google Login:**
-\`\`\`bash
+```bash
 curl http://localhost:5001/api/auth/google
-\`\`\`
+```
 
 **Get Current User (with JWT cookie):**
-\`\`\`bash
-curl -X GET http://localhost:5001/api/user/me \\
+```bash
+curl -X GET http://localhost:5001/api/user/me 
   --cookie "vora_token=YOUR_JWT_TOKEN"
-\`\`\`
+```
 
 **Logout:**
-\`\`\`bash
-curl -X POST http://localhost:5001/api/auth/logout \\
+```bash
+curl -X POST http://localhost:5001/api/auth/logout 
   --cookie "vora_token=YOUR_JWT_TOKEN"
-\`\`\`
+```
 
 ---
 
@@ -295,29 +287,29 @@ curl -X POST http://localhost:5001/api/auth/logout \\
 
 ### MongoDB Connection Issues
 
-\`\`\`bash
+```bash
 # Check if MongoDB is running
 mongosh
 
 # Or check service status
 brew services list | grep mongodb
-\`\`\`
+```
 
 ### Port Already in Use
 
-\`\`\`bash
+```bash
 # Find process using port 5001
 lsof -i :5001
 
 # Kill the process
 kill -9 <PID>
-\`\`\`
+```
 
 ### OAuth Redirect URI Mismatch
 
 Make sure the callback URLs in your OAuth provider settings match exactly:
-- Google: \`http://localhost:5001/api/auth/callback/google\`
-- Facebook: \`http://localhost:5001/api/auth/callback/facebook\`
+- Google: `http://localhost:5001/api/auth/callback/google`
+- Facebook: `http://localhost:5001/api/auth/callback/facebook`
 
 ### Missing Environment Variables
 
@@ -329,7 +321,7 @@ The app will fail to start if required env vars are missing. Check console outpu
 
 ### User Model
 
-\`\`\`javascript
+```javascript
 {
   name: String,
   email: String (unique, indexed),
@@ -351,7 +343,7 @@ The app will fail to start if required env vars are missing. Check console outpu
   createdAt: Date,
   updatedAt: Date
 }
-\`\`\`
+```
 
 ---
 
@@ -359,13 +351,13 @@ The app will fail to start if required env vars are missing. Check console outpu
 
 ### Environment Variables for Production
 
-\`\`\`env
+```env
 NODE_ENV=production
 MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/vora
 FRONTEND_URL=https://vora.app
 GOOGLE_CALLBACK_URL=https://api.vora.app/api/auth/callback/google
 FACEBOOK_CALLBACK_URL=https://api.vora.app/api/auth/callback/facebook
-\`\`\`
+```
 
 ### Recommended Hosting
 
@@ -391,9 +383,9 @@ FACEBOOK_CALLBACK_URL=https://api.vora.app/api/auth/callback/facebook
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (\`git checkout -b feature/amazing-feature\`)
-3. Commit your changes (\`git commit -m 'Add amazing feature'\`)
-4. Push to the branch (\`git push origin feature/amazing-feature\`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ---
@@ -406,8 +398,10 @@ This project is licensed under the ISC License.
 
 ## 👤 Author
 
-**Amitrajeet**
+**Amitrajeet Konch**
 - GitHub: [@amitrajeet7635](https://github.com/amitrajeet7635)
+
+**Khushi Kesarwani**
 - GitHub: [@kesarwanikhushi](https://github.com/kesarwanikhushi)
 
 ---
@@ -426,7 +420,7 @@ This project is licensed under the ISC License.
 For issues and questions:
 - Open an issue on GitHub
 - Check the troubleshooting section
-- Review the logs in \`logs/\` directory
+- Review the logs in `logs/` directory
 
 ---
 
