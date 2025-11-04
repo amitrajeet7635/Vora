@@ -4,24 +4,35 @@ const logger = require('../utils/logger');
 /**
  * MongoDB Connection Configuration
  * Handles connection lifecycle with retry logic
+ * Optimized for serverless environments (Vercel)
  */
 
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) {
+  // Check if already connected or connecting
+  if (isConnected && mongoose.connection.readyState === 1) {
     logger.info('Using existing MongoDB connection');
+    return;
+  }
+
+  // If mongoose has an existing connection, use it
+  if (mongoose.connection.readyState === 1) {
+    isConnected = true;
+    logger.info('Reusing active MongoDB connection');
     return;
   }
 
   try {
     const options = {
-      // Connection pool settings
-      maxPoolSize: 10,
-      minPoolSize: 2,
-      socketTimeoutMS: 45001,
-      serverSelectionTimeoutMS: 5001,
+      // Connection pool settings - optimized for serverless
+      maxPoolSize: 1, // Reduced for serverless (each function instance)
+      minPoolSize: 0,
+      socketTimeoutMS: 30000, // 30 seconds
+      serverSelectionTimeoutMS: 10000, // 10 seconds (faster timeout for serverless)
       family: 4, // Use IPv4
+      // Prevent buffering commands in serverless
+      bufferCommands: false,
     };
 
     const conn = await mongoose.connect(process.env.MONGODB_URI, options);
@@ -52,20 +63,8 @@ const connectDB = async () => {
       isConnected = true;
     });
 
-    // Graceful shutdown
-    process.on('SIGINT', async () => {
-      try {
-        await mongoose.connection.close();
-        logger.info('MongoDB connection closed through app termination');
-        process.exit(0);
-      } catch (err) {
-        logger.error({
-          message: 'Error closing MongoDB connection',
-          error: err.message,
-        });
-        process.exit(1);
-      }
-    });
+    // Note: In serverless environments, SIGINT/SIGTERM may not be reliable
+    // Vercel handles cleanup automatically
   } catch (error) {
     logger.error({
       message: 'MongoDB connection failed',
@@ -73,9 +72,10 @@ const connectDB = async () => {
       stack: error.stack,
     });
     
-    // Retry connection after 5 seconds
-    logger.info('Retrying MongoDB connection in 5 seconds...');
-    setTimeout(connectDB, 5001);
+    isConnected = false;
+    
+    // Don't retry in serverless - let the next invocation try
+    throw error;
   }
 };
 
