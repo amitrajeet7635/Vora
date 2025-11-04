@@ -165,8 +165,10 @@ const handleUnhandledRejection = () => {
       promise: promise,
     });
 
-    // Exit with failure
-    process.exit(1);
+    // In serverless environments, don't exit - let the function complete
+    if (!process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      process.exit(1);
+    }
   });
 };
 
@@ -181,8 +183,10 @@ const handleUncaughtException = () => {
       stack: error.stack,
     });
 
-    // Exit with failure
-    process.exit(1);
+    // In serverless environments, don't exit - let the function complete
+    if (!process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      process.exit(1);
+    }
   });
 };
 

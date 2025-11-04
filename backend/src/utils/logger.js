@@ -55,37 +55,51 @@ const jsonFormat = winston.format.combine(
   winston.format.json()
 );
 
-// Create the logger
-const logger = winston.createLogger({
-  level: config.logging.level || 'info',
-  levels,
-  format: logFormat,
-  transports: [
-    // Console transport
-    new winston.transports.Console({
-      format: config.isDevelopment ? consoleFormat : jsonFormat,
-    }),
-    
-    // File transport for errors
+// Determine if running in serverless environment (Vercel)
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+// Configure transports based on environment
+const transports = [
+  // Console transport (always available)
+  new winston.transports.Console({
+    format: config.isDevelopment ? consoleFormat : jsonFormat,
+  }),
+];
+
+// Only add file transports in non-serverless environments
+if (!isServerless && config.isDevelopment) {
+  transports.push(
     new winston.transports.File({
       filename: 'logs/error.log',
       level: 'error',
       format: jsonFormat,
     }),
-    
-    // File transport for all logs
     new winston.transports.File({
       filename: 'logs/combined.log',
       format: jsonFormat,
-    }),
-  ],
+    })
+  );
+}
+
+// Create the logger
+const logger = winston.createLogger({
+  level: config.logging.level || 'info',
+  levels,
+  format: logFormat,
+  transports,
   // Handle exceptions and rejections
-  exceptionHandlers: [
-    new winston.transports.File({ filename: 'logs/exceptions.log' }),
-  ],
-  rejectionHandlers: [
-    new winston.transports.File({ filename: 'logs/rejections.log' }),
-  ],
+  exceptionHandlers: isServerless 
+    ? [new winston.transports.Console({ format: jsonFormat })]
+    : [
+        new winston.transports.Console({ format: jsonFormat }),
+        new winston.transports.File({ filename: 'logs/exceptions.log' })
+      ],
+  rejectionHandlers: isServerless
+    ? [new winston.transports.Console({ format: jsonFormat })]
+    : [
+        new winston.transports.Console({ format: jsonFormat }),
+        new winston.transports.File({ filename: 'logs/rejections.log' })
+      ],
 });
 
 /**

@@ -25,15 +25,25 @@ const validateEnv = () => {
   const missing = requiredEnvVars.filter((envVar) => !process.env[envVar]);
 
   if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables: ${missing.join(', ')}\n` +
-        'Please check your .env file.'
-    );
+    const errorMessage = `Missing required environment variables: ${missing.join(', ')}\n` +
+      'Please check your .env file or Vercel environment variables.';
+    
+    console.error('❌ Environment Validation Failed:');
+    console.error(errorMessage);
+    console.error('Available env vars:', Object.keys(process.env).filter(k => !k.includes('SECRET')).join(', '));
+    
+    throw new Error(errorMessage);
   }
 };
 
-// Validate on module load
-validateEnv();
+// Validate on module load with better error handling
+try {
+  validateEnv();
+  console.log('✅ Environment variables validated successfully');
+} catch (error) {
+  console.error('Environment validation error:', error.message);
+  throw error;
+}
 
 const config = {
   // Server
