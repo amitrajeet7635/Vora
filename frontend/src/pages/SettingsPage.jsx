@@ -31,14 +31,14 @@ export const SettingsPage = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       <Navbar />
       
-      <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-12 px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl font-bold mb-8" style={{ color: 'var(--color-text)' }}>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8" style={{ color: 'var(--color-text)' }}>
               Settings
             </h1>
 
@@ -47,12 +47,12 @@ export const SettingsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="rounded-lg shadow-soft p-6 mb-6"
+              className="rounded-lg shadow-soft p-4 sm:p-6 mb-4 sm:mb-6"
               style={{ backgroundColor: 'var(--color-card)' }}
             >
               <div className="flex items-center gap-2 mb-4">
                 <UserIcon size={20} style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
+                <h2 className="text-lg sm:text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
                   Profile Settings
                 </h2>
               </div>
@@ -154,7 +154,7 @@ export const SettingsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="rounded-lg shadow-soft p-6 mb-6"
+              className="rounded-lg shadow-soft p-4 sm:p-6 mb-4 sm:mb-6"
               style={{ backgroundColor: 'var(--color-card)' }}
             >
               <div className="flex items-center gap-2 mb-4">
@@ -163,13 +163,13 @@ export const SettingsPage = () => {
                 ) : (
                   <Sun size={20} style={{ color: 'var(--color-accent)' }} />
                 )}
-                <h2 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
+                <h2 className="text-lg sm:text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
                   Appearance
                 </h2>
               </div>
 
               <div className="space-y-4">
-                <p style={{ color: 'var(--color-text-secondary)' }}>
+                <p className="text-sm sm:text-base" style={{ color: 'var(--color-text-secondary)' }}>
                   Choose how Vora looks to you. Select a theme that suits your preference.
                 </p>
 
@@ -204,18 +204,18 @@ export const SettingsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="rounded-lg shadow-soft p-6"
+              className="rounded-lg shadow-soft p-4 sm:p-6"
               style={{ backgroundColor: 'var(--color-card)' }}
             >
               <div className="flex items-center gap-2 mb-4">
                 <Shield size={20} style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
+                <h2 className="text-lg sm:text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
                   Security
                 </h2>
               </div>
 
               <div className="space-y-4">
-                <p style={{ color: 'var(--color-text-secondary)' }}>
+                <p className="text-sm sm:text-base" style={{ color: 'var(--color-text-secondary)' }}>
                   Your account is secured with OAuth 2.0. Manage your connected accounts from the Dashboard.
                 </p>
 

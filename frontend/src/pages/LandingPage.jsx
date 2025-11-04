@@ -46,12 +46,12 @@ export const LandingPage = () => {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Theme Toggle - Top Right Corner */}
-      <div className="absolute top-6 right-6 z-50">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50">
         <ThemeToggleButton variant="icon" />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,12 +63,12 @@ export const LandingPage = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1, duration: 0.6 }}
-            className="flex justify-center mb-8"
+            className="flex justify-center mb-6 sm:mb-8"
           >
             <img 
               src={voraLogo} 
               alt="Vora Logo" 
-              className="h-20 w-auto object-contain"
+              className="h-16 sm:h-20 w-auto object-contain"
             />
           </motion.div>
 
@@ -77,7 +77,7 @@ export const LandingPage = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-5xl font-bold mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 px-2"
             style={{ color: 'var(--color-text)' }}
           >
             Welcome to Vora
@@ -87,7 +87,7 @@ export const LandingPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg mb-12 leading-relaxed"
+            className="text-base sm:text-lg mb-8 sm:mb-12 leading-relaxed px-2"
             style={{ color: 'var(--color-text-secondary)' }}
           >
             Authenticate securely with Google or Facebook — fast, simple, private.
@@ -124,8 +124,8 @@ export const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="py-6 px-4" style={{ borderTop: '1px solid var(--color-border)' }}>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+      <footer className="py-4 sm:py-6 px-4" style={{ borderTop: '1px solid var(--color-border)' }}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm" style={{ color: 'var(--color-text-secondary)' }}>
           <a
             href="#"
             className="transition-colors"

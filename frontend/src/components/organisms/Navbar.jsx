@@ -22,33 +22,33 @@ export const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md border-b" style={{ backgroundColor: 'var(--color-navbar-bg)', borderColor: 'var(--color-border)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-1 sm:gap-2">
             <motion.h1
-              className="text-2xl font-bold"
+              className="text-xl sm:text-2xl font-bold"
               style={{ color: 'var(--color-text)' }}
               whileHover={{ scale: 1.05 }}
             >
               Vora
             </motion.h1>
-            <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+            <span className="text-xs hidden sm:inline" style={{ color: 'var(--color-text-secondary)' }}>
               Sign in Smarter.
             </span>
           </Link>
 
           {/* Right side */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Theme Toggle Button */}
             <ThemeToggleButton variant="icon" />
 
-            {/* GitHub Link */}
+            {/* GitHub Link - Hidden on mobile */}
             <a
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg transition-colors"
+              className="hidden sm:block p-2 rounded-lg transition-colors"
               style={{ color: 'var(--color-text)' }}
               aria-label="GitHub"
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-card)'}
