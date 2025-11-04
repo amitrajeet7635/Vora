@@ -6,6 +6,7 @@ import { ThemeToggleButton } from '../components/atoms/ThemeToggleButton';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import voraLogo from '../assets/vora-logo.png';
 
 // Google Icon SVG - Simplified white version for better visibility on colored backgrounds
 const GoogleIcon = () => (
@@ -57,6 +58,20 @@ export const LandingPage = () => {
           transition={{ duration: 0.6 }}
           className="max-w-md w-full text-center"
         >
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="flex justify-center mb-8"
+          >
+            <img 
+              src={voraLogo} 
+              alt="Vora Logo" 
+              className="h-20 w-auto object-contain"
+            />
+          </motion.div>
+
           {/* Hero Section */}
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -134,7 +149,7 @@ export const LandingPage = () => {
             GitHub
           </a>
           <span className="hidden sm:inline">•</span>
-          <span>© 2024 Vora</span>
+          <span>© 2025 Vora</span>
         </div>
       </footer>
     </div>

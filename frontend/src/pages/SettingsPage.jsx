@@ -70,18 +70,25 @@ export const SettingsPage = () => {
                         alt={user.name}
                         className="w-16 h-16 rounded-full object-cover"
                         style={{ boxShadow: '0 0 0 4px var(--color-accent-light)' }}
-                      />
-                    ) : (
-                      <div 
-                        className="w-16 h-16 rounded-full flex items-center justify-center"
-                        style={{ 
-                          backgroundColor: 'var(--color-accent)',
-                          boxShadow: '0 0 0 4px var(--color-accent-light)'
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.nextElementSibling;
+                          if (fallback) fallback.style.display = 'flex';
                         }}
-                      >
-                        <UserIcon size={24} className="text-white" />
-                      </div>
-                    )}
+                      />
+                    ) : null}
+                    <div 
+                      className="w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{ 
+                        backgroundColor: 'var(--color-accent)',
+                        boxShadow: '0 0 0 4px var(--color-accent-light)',
+                        display: user?.avatar ? 'none' : 'flex'
+                      }}
+                    >
+                      <UserIcon size={24} className="text-white" />
+                    </div>
                     <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                       Profile picture is synced from your connected accounts
                     </p>
@@ -186,7 +193,7 @@ export const SettingsPage = () => {
                   border: '1px solid var(--color-accent)'
                 }}>
                   <p className="text-sm" style={{ color: 'var(--color-text)' }}>
-                    <strong>💡 Tip:</strong> Your theme preference is automatically saved and will be remembered across sessions.
+                    <strong>✨ Tip:</strong> Your theme preference is automatically saved and will be remembered across sessions.
                   </p>
                 </div>
               </div>

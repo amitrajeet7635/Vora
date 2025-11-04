@@ -34,7 +34,7 @@ export const Navbar = () => {
               Vora
             </motion.h1>
             <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-              Sign in smarter.
+              Sign in Smarter.
             </span>
           </Link>
 
@@ -72,12 +72,24 @@ export const Navbar = () => {
                       src={user.avatar}
                       alt={user.name}
                       className="w-8 h-8 rounded-full object-cover"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const fallback = e.currentTarget.nextElementSibling;
+                        if (fallback) fallback.style.display = 'flex';
+                      }}
                     />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent)' }}>
-                      <User size={18} className="text-white" />
-                    </div>
-                  )}
+                  ) : null}
+                  <div 
+                    className="w-8 h-8 rounded-full flex items-center justify-center" 
+                    style={{ 
+                      backgroundColor: 'var(--color-accent)',
+                      display: user.avatar ? 'none' : 'flex'
+                    }}
+                  >
+                    <User size={18} className="text-white" />
+                  </div>
                 </motion.button>
 
                 {/* Dropdown Menu */}

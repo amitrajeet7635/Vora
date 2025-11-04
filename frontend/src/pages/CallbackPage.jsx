@@ -1,5 +1,5 @@
 // Auth Callback Page - Handles OAuth redirects
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PageLoader } from '../components/atoms/Loader';
 import { useAuth } from '../context/AuthContext';
@@ -13,9 +13,13 @@ export const CallbackPage = () => {
   const { refreshUser } = useAuth();
   const { showToast } = useToast();
   const [error, setError] = useState(null);
+  const hasHandledCallback = useRef(false);
 
   useEffect(() => {
     const handleCallback = async () => {
+      // Prevent multiple executions
+      if (hasHandledCallback.current) return;
+      hasHandledCallback.current = true;
       const errorParam = searchParams.get('error');
       const successParam = searchParams.get('success');
 
@@ -43,7 +47,8 @@ export const CallbackPage = () => {
     };
 
     handleCallback();
-  }, [searchParams, navigate, refreshUser, showToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
 
   if (error) {
     return (

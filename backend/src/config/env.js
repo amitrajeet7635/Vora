@@ -59,7 +59,7 @@ const config = {
   // Frontend
   frontend: {
     url: process.env.FRONTEND_URL,
-    loginSuccessRedirect: process.env.FRONTEND_LOGIN_SUCCESS_REDIRECT || '/dashboard',
+    loginSuccessRedirect: process.env.FRONTEND_LOGIN_SUCCESS_REDIRECT || '/callback?success=true',
     loginFailureRedirect: process.env.FRONTEND_LOGIN_FAILURE_REDIRECT || '/login',
   },
 

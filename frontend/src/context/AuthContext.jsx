@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       // Redirect to OAuth provider
-      window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/auth/${provider}`;
+      window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/${provider}`;
     } catch (err) {
       setError(err.message || 'Login failed');
       throw err;
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   const linkProvider = async (provider) => {
     try {
       setError(null);
-      window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/auth/link/${provider}`;
+      window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/${provider}?link=true&userId=${user._id}`;
     } catch (err) {
       setError(err.message || 'Failed to link provider');
       throw err;

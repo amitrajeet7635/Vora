@@ -19,9 +19,8 @@ const { authLimiter } = require('../middlewares/rateLimiter');
 router.get('/google', authLimiter, initiateGoogleLogin);
 router.get('/facebook', authLimiter, initiateFacebookLogin);
 
-// OAuth Callback Routes
-router.get('/callback/google', authLimiter, handleOAuthCallback);
-router.get('/callback/facebook', authLimiter, handleOAuthCallback);
+// OAuth Callback Routes (dynamic provider parameter)
+router.get('/callback/:provider', authLimiter, handleOAuthCallback);
 
 // Logout Route (protected)
 router.post('/logout', authenticate, logout);

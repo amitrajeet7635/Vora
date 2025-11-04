@@ -1,10 +1,10 @@
 // API utilities for authentication
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 export const authApi = {
   // Get user profile
   getProfile: async () => {
-    const response = await fetch(`${API_URL}/api/user/profile`, {
+    const response = await fetch(`${API_URL}/api/user/me`, {
       method: 'GET',
       credentials: 'include', // Include cookies
       headers: {
@@ -19,12 +19,13 @@ export const authApi = {
       throw new Error('Failed to fetch profile');
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.user; // Extract user object from response
   },
 
   // Logout
   logout: async () => {
-    const response = await fetch(`${API_URL}/auth/logout`, {
+    const response = await fetch(`${API_URL}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -41,7 +42,7 @@ export const authApi = {
 
   // Unlink provider
   unlinkProvider: async (provider) => {
-    const response = await fetch(`${API_URL}/api/user/unlink/${provider}`, {
+    const response = await fetch(`${API_URL}/api/auth/unlink/${provider}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -53,13 +54,14 @@ export const authApi = {
       throw new Error(`Failed to unlink ${provider}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.user; // Extract user object from response
   },
 
   // Update profile
   updateProfile: async (data) => {
-    const response = await fetch(`${API_URL}/api/user/profile`, {
-      method: 'PUT',
+    const response = await fetch(`${API_URL}/api/user/me`, {
+      method: 'PATCH',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -71,6 +73,7 @@ export const authApi = {
       throw new Error('Failed to update profile');
     }
 
-    return response.json();
+    const result = await response.json();
+    return result.user; // Extract user object from response
   },
 };
