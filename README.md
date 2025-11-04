@@ -1,11 +1,39 @@
 # Vora - OAuth2 Authentication Platform
 
-A production-grade Node.js backend implementing **OAuth2 Authorization Code Flow with PKCE** for Google and Facebook authentication. Built with Express, MongoDB, and JWT for secure session management.
+A production-grade **MERN stack** application implementing **OAuth2 Authorization Code Flow with PKCE** for Google and Facebook authentication. Built with React, Node.js, Express, MongoDB, and JWT for secure session management.
+
+🌐 **Live Demo:** [vora-auth.vercel.app](https://vora-auth.vercel.app)
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/amitrajeet7635/Vora.git
+cd Vora
+
+# Backend setup
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your credentials
+npm run dev
+
+# Frontend setup (in a new terminal)
+cd frontend
+npm install
+echo "VITE_API_URL=http://localhost:5001" > .env
+npm run dev
+
+# Visit http://localhost:5173
+```
 
 ---
 
 ## 🚀 Features
 
+### Backend
 - ✅ **OAuth2 with PKCE** - Secure authorization code flow with Proof Key for Code Exchange
 - ✅ **Multi-Provider Support** - Google and Facebook authentication
 - ✅ **JWT Sessions** - Secure httpOnly cookie-based authentication
@@ -17,6 +45,19 @@ A production-grade Node.js backend implementing **OAuth2 Authorization Code Flow
 - ✅ **Request Tracking** - Full audit trail of authentication events
 - ✅ **MongoDB Integration** - Mongoose ODM with efficient indexing
 - ✅ **Production Ready** - Graceful shutdown, error handling, health checks
+
+### Frontend
+- ✅ **Modern React** - Built with React 18 + Vite for blazing fast development
+- ✅ **Beautiful UI** - Responsive design with Tailwind CSS
+- ✅ **Dark/Light Theme** - Theme toggle with persistent preferences
+- ✅ **Smooth Animations** - Framer Motion for delightful user experience
+- ✅ **OAuth Integration** - Seamless Google & Facebook login buttons
+- ✅ **Account Management** - Link/unlink providers, view active sessions
+- ✅ **Profile Customization** - Update name, view avatar, manage settings
+- ✅ **Toast Notifications** - Real-time feedback for user actions
+- ✅ **Fully Responsive** - Mobile-first design for all screen sizes
+- ✅ **Error Handling** - Error boundaries and fallback UI
+- ✅ **Protected Routes** - Client-side route protection
 
 ---
 
@@ -32,20 +73,23 @@ A production-grade Node.js backend implementing **OAuth2 Authorization Code Flow
 
 ## 🛠️ Installation
 
-### 1. Clone the repository
+### Backend Setup
+
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/amitrajeet7635/Vora.git
-cd Vora/backend
+cd Vora
 ```
 
-### 2. Install dependencies
+#### 2. Install backend dependencies
 
 ```bash
+cd backend
 npm install
 ```
 
-### 3. Configure environment variables
+#### 3. Configure backend environment variables
 
 Copy the example environment file:
 
@@ -53,7 +97,7 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Edit `.env` with your configuration:
+Edit `backend/.env` with your configuration:
 
 ```env
 # Server
@@ -82,7 +126,7 @@ FACEBOOK_APP_SECRET=your-facebook-app-secret
 FACEBOOK_CALLBACK_URL=http://localhost:5001/api/auth/callback/facebook
 ```
 
-### 4. Start MongoDB
+#### 4. Start MongoDB
 
 Make sure MongoDB is running locally or update `MONGODB_URI` with your connection string.
 
@@ -94,23 +138,51 @@ brew services start mongodb-community
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
+### Frontend Setup
+
+#### 1. Install frontend dependencies
+
+```bash
+cd ../frontend
+npm install
+```
+
+#### 2. Configure frontend environment variables
+
+Create `frontend/.env`:
+
+```env
+# Backend API URL
+VITE_API_URL=http://localhost:5001
+```
+
 ---
 
 ## 🎯 Usage
 
-### Development Mode
+### Running the Full Application
+
+#### Start Backend (Terminal 1)
 
 ```bash
+cd backend
 npm run dev
 ```
 
-The server will start on `http://localhost:5001` with auto-reload enabled.
+The backend server will start on `http://localhost:5001`
 
-### Production Mode
+#### Start Frontend (Terminal 2)
 
 ```bash
-npm start
+cd frontend
+npm run dev
 ```
+
+The frontend will start on `http://localhost:5173`
+
+#### Access the Application
+
+Open your browser and navigate to: `http://localhost:5173`
 
 ---
 
@@ -170,6 +242,8 @@ npm start
 
 ## 🏗️ Project Structure
 
+### Backend Structure
+
 ```
 backend/
 ├── src/
@@ -201,6 +275,46 @@ backend/
 ├── server.js                  # Server entry point
 ├── seed.js                    # Database seeding
 ├── .env.example               # Environment template
+└── package.json
+```
+
+### Frontend Structure
+
+```
+frontend/
+├── src/
+│   ├── api/
+│   │   └── auth.js            # API client functions
+│   ├── assets/
+│   │   └── vora-logo.png      # Application logo
+│   ├── components/
+│   │   ├── atoms/
+│   │   │   ├── Button.jsx     # Reusable button component
+│   │   │   ├── Loader.jsx     # Loading spinners
+│   │   │   └── ThemeToggleButton.jsx  # Theme switcher
+│   │   ├── molecules/
+│   │   │   └── Toast.jsx      # Toast notifications
+│   │   └── organisms/
+│   │       ├── ErrorBoundary.jsx  # Error boundary wrapper
+│   │       └── Navbar.jsx     # Navigation bar
+│   ├── context/
+│   │   ├── AuthContext.jsx    # Authentication state
+│   │   └── ThemeContext.jsx   # Theme state management
+│   ├── pages/
+│   │   ├── CallbackPage.jsx   # OAuth callback handler
+│   │   ├── DashboardPage.jsx  # User dashboard
+│   │   ├── LandingPage.jsx    # Home/login page
+│   │   └── SettingsPage.jsx   # User settings
+│   ├── routes/
+│   │   └── ProtectedRoute.jsx # Route protection HOC
+│   ├── App.jsx                # App component
+│   ├── main.jsx               # Entry point
+│   └── index.css              # Global styles
+├── public/                    # Static assets
+├── index.html                 # HTML template
+├── vite.config.js             # Vite configuration
+├── tailwind.config.js         # Tailwind CSS config
+├── postcss.config.js          # PostCSS config
 └── package.json
 ```
 
@@ -257,7 +371,7 @@ Logs are stored in:
 
 ## 🧪 Testing
 
-### Manual Testing with cURL
+### Backend Testing
 
 **Health Check:**
 ```bash
@@ -281,11 +395,49 @@ curl -X POST http://localhost:5001/api/auth/logout
   --cookie "vora_token=YOUR_JWT_TOKEN"
 ```
 
+### Frontend Testing
+
+#### Development Testing
+1. Start both backend and frontend servers
+2. Navigate to `http://localhost:5173`
+3. Click "Continue with Google" or "Continue with Facebook"
+4. Complete OAuth flow
+5. Verify dashboard displays user information
+6. Test theme toggle
+7. Test account linking/unlinking
+8. Test logout functionality
+
+#### Production Testing
+Visit [vora-auth.vercel.app](https://vora-auth.vercel.app) and test:
+- OAuth login flows
+- Dashboard features
+- Settings page
+- Theme persistence
+- Mobile responsiveness
+
+---
+
+## 📸 Screenshots
+
+### Landing Page (Light Theme)
+Beautiful, clean interface with OAuth buttons and theme toggle.
+
+### Landing Page (Dark Theme)
+Elegant dark mode with proper contrast and readability.
+
+### Dashboard
+User profile with connected accounts and management options.
+
+### Settings
+Customize profile and manage application preferences.
+
 ---
 
 ## 🐛 Troubleshooting
 
-### MongoDB Connection Issues
+### Backend Issues
+
+#### MongoDB Connection Issues
 
 ```bash
 # Check if MongoDB is running
@@ -295,7 +447,7 @@ mongosh
 brew services list | grep mongodb
 ```
 
-### Port Already in Use
+#### Port Already in Use
 
 ```bash
 # Find process using port 5001
@@ -305,15 +457,51 @@ lsof -i :5001
 kill -9 <PID>
 ```
 
-### OAuth Redirect URI Mismatch
+#### OAuth Redirect URI Mismatch
 
 Make sure the callback URLs in your OAuth provider settings match exactly:
 - Google: `http://localhost:5001/api/auth/callback/google`
 - Facebook: `http://localhost:5001/api/auth/callback/facebook`
 
-### Missing Environment Variables
+#### Missing Environment Variables
 
 The app will fail to start if required env vars are missing. Check console output for details.
+
+### Frontend Issues
+
+#### API Connection Errors
+
+Ensure backend is running and `VITE_API_URL` in `frontend/.env` points to the correct backend URL.
+
+```env
+# Development
+VITE_API_URL=http://localhost:5001
+
+# Production
+VITE_API_URL=https://your-backend-api.com
+```
+
+#### Theme Not Persisting
+
+Clear localStorage and refresh:
+```javascript
+localStorage.clear();
+location.reload();
+```
+
+#### Images Not Loading (Profile/Avatar)
+
+This might be due to CORS issues with Google/Facebook CDN. The app includes fallback UI for failed images.
+
+#### Build Errors
+
+```bash
+# Clear node_modules and reinstall
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
 
 ---
 
@@ -369,6 +557,7 @@ FACEBOOK_CALLBACK_URL=https://api.<appname>.app/api/auth/callback/facebook
 
 ## 📚 Tech Stack
 
+### Backend
 - **Runtime:** Node.js 18+
 - **Framework:** Express.js 5
 - **Database:** MongoDB with Mongoose
@@ -378,9 +567,141 @@ FACEBOOK_CALLBACK_URL=https://api.<appname>.app/api/auth/callback/facebook
 - **Validation:** Express-Validator
 - **HTTP Client:** Axios
 
+### Frontend
+- **Framework:** React 18
+- **Build Tool:** Vite 5
+- **Styling:** Tailwind CSS 3
+- **Animations:** Framer Motion
+- **Routing:** React Router 6
+- **Icons:** Lucide React
+- **HTTP Client:** Fetch API
+- **State Management:** React Context API
+
 ---
 
-## 🤝 Contributing
+## 🎨 Frontend Features
+
+### Pages
+
+1. **Landing Page** (`/`)
+   - Beautiful hero section with logo
+   - "Continue with Google" button
+   - "Continue with Facebook" button
+   - Theme toggle (Dark/Light)
+   - Responsive design for all devices
+
+2. **Dashboard** (`/dashboard`)
+   - User profile information
+   - Connected accounts management
+   - Link/unlink OAuth providers
+   - Profile avatar display
+   - Account security notice
+
+3. **Settings** (`/settings`)
+   - Update display name
+   - View email address
+   - Theme preferences
+   - Profile picture preview
+   - Security information
+
+4. **Callback Page** (`/callback`)
+   - Handles OAuth redirects
+   - Loading state
+   - Error handling
+   - Auto-redirect after success
+
+### Components Architecture
+
+#### Atoms (Basic Building Blocks)
+- **Button** - Multi-variant button (Primary, Google, Facebook, Outline, Ghost)
+- **Loader** - Page and inline loading spinners
+- **ThemeToggleButton** - Switch between light/dark themes
+
+#### Molecules (Composite Components)
+- **Toast** - Notification system with success/error states
+
+#### Organisms (Complex Components)
+- **Navbar** - Responsive navigation with user menu
+- **ErrorBoundary** - Catches React errors gracefully
+
+### Theme System
+
+The application supports both light and dark themes with:
+- CSS custom properties for dynamic theming
+- Persistent theme preference in localStorage
+- Smooth transition animations
+- Accessible color contrast ratios
+
+**Color Scheme:**
+```css
+Light Theme:
+- Background: #F3F4F6
+- Card: #FFFFFF
+- Text: #1F2937
+- Accent: #6366F1
+
+Dark Theme:
+- Background: #111827
+- Card: #1F2937
+- Text: #F9FAFB
+- Accent: #818CF8
+```
+
+### Responsive Design
+
+Mobile-first approach with breakpoints:
+- **Mobile:** < 640px
+- **Tablet:** 640px - 1024px
+- **Desktop:** > 1024px
+
+All pages are fully responsive with:
+- Flexible layouts
+- Touch-friendly buttons
+- Optimized font sizes
+- Proper spacing
+- Hidden elements on small screens
+
+---
+
+## 🚀 Deployment
+
+### Frontend Deployment (Vercel)
+
+The frontend is deployed on Vercel:
+- **Live URL:** [vora-auth.vercel.app](https://vora-auth.vercel.app)
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+
+#### Deploy your own:
+
+```bash
+cd frontend
+npm install -g vercel
+vercel
+```
+
+Environment variables for Vercel:
+```env
+VITE_API_URL=https://your-backend-api.com
+```
+
+### Backend Deployment
+
+#### Environment Variables for Production
+
+```env
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/vora
+FRONTEND_URL=https://vora-auth.vercel.app
+GOOGLE_CALLBACK_URL=https://your-api.com/api/auth/callback/google
+FACEBOOK_CALLBACK_URL=https://your-api.com/api/auth/callback/facebook
+```
+
+#### Recommended Hosting
+
+- **Frontend:** Vercel, Netlify, Cloudflare Pages
+- **Backend:** Railway, Render, Heroku, AWS EC2
+- **Database:** MongoDB Atlas
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
