@@ -1,10 +1,5 @@
 require('dotenv').config();
 
-/**
- * Vercel Serverless Function Handler
- * Exports the Express app for Vercel deployment
- */
-
 let app;
 let dbInitialized = false;
 

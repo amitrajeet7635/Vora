@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 const logger = require('../utils/logger');
 
-/**
- * MongoDB Connection Configuration
- * Handles connection lifecycle with retry logic
- * Optimized for serverless environments (Vercel)
- */
 
 let isConnected = false;
 
