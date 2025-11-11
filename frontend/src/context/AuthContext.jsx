@@ -46,6 +46,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithFacebook = async (facebookResponse) => {
+    try {
+      setError(null);
+      setLoading(true);
+      
+      // Call backend to verify token and create session
+      const userData = await authApi.facebookLogin(facebookResponse);
+      setUser(userData);
+      
+      return userData;
+    } catch (err) {
+      setError(err.message || 'Facebook login failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       setError(null);
@@ -84,6 +102,7 @@ export const AuthProvider = ({ children }) => {
     error,
     isAuthenticated: !!user,
     login,
+    loginWithFacebook,
     logout,
     linkProvider,
     unlinkProvider,

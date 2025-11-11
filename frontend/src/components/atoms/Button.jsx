@@ -12,12 +12,12 @@ export const Button = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200';
 
   const variants = {
     primary: 'text-white shadow-lg hover:shadow-xl',
-    google: 'text-white shadow-lg hover:shadow-xl',
-    facebook: 'text-white shadow-lg hover:shadow-xl',
+    google: 'shadow-lg hover:shadow-xl border-2',
+    facebook: 'shadow-lg hover:shadow-xl border-2',
     outline: 'border-2 bg-transparent shadow-sm hover:shadow-md',
     ghost: 'bg-transparent',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500 shadow-lg',
@@ -40,12 +40,14 @@ export const Button = ({
       case 'google':
         return {
           backgroundColor: 'var(--color-google)',
-          color: '#FFFFFF',
+          borderColor: 'var(--color-google-border)',
+          color: 'var(--color-google-text)',
         };
       case 'facebook':
         return {
           backgroundColor: 'var(--color-facebook)',
-          color: '#FFFFFF',
+          borderColor: 'var(--color-facebook-border)',
+          color: 'var(--color-facebook-text)',
         };
       case 'outline':
         return {
@@ -66,8 +68,12 @@ export const Button = ({
     if (disabled || loading) return;
     if (variant === 'google') {
       e.currentTarget.style.backgroundColor = 'var(--color-google-hover)';
+      e.currentTarget.style.borderColor = 'var(--color-google-hover)';
+      e.currentTarget.style.color = 'var(--color-google-text-hover)';
     } else if (variant === 'facebook') {
       e.currentTarget.style.backgroundColor = 'var(--color-facebook-hover)';
+      e.currentTarget.style.borderColor = 'var(--color-facebook-hover)';
+      e.currentTarget.style.color = 'var(--color-facebook-text-hover)';
     } else if (variant === 'primary') {
       e.currentTarget.style.backgroundColor = 'var(--color-accent-hover)';
     } else if (variant === 'outline') {
@@ -79,8 +85,12 @@ export const Button = ({
     if (disabled || loading) return;
     if (variant === 'google') {
       e.currentTarget.style.backgroundColor = 'var(--color-google)';
+      e.currentTarget.style.borderColor = 'var(--color-google-border)';
+      e.currentTarget.style.color = 'var(--color-google-text)';
     } else if (variant === 'facebook') {
       e.currentTarget.style.backgroundColor = 'var(--color-facebook)';
+      e.currentTarget.style.borderColor = 'var(--color-facebook-border)';
+      e.currentTarget.style.color = 'var(--color-facebook-text)';
     } else if (variant === 'primary') {
       e.currentTarget.style.backgroundColor = 'var(--color-accent)';
     } else if (variant === 'outline') {

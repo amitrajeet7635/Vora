@@ -8,13 +8,25 @@ import { Navbar } from '../components/organisms/Navbar';
 import { useState } from 'react';
 
 export const DashboardPage = () => {
-  const { user, linkProvider, unlinkProvider } = useAuth();
+  const { user, linkProvider, unlinkProvider, loading } = useAuth();
   const { showToast } = useToast();
   const [unlinking, setUnlinking] = useState(null);
 
-  const connectedProviders = user?.providers || [];
-  const hasGoogle = connectedProviders.some(p => p.name === 'google');
-  const hasFacebook = connectedProviders.some(p => p.name === 'facebook');
+  // Show loading state while user data is being fetched
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--color-accent)' }}></div>
+          <p style={{ color: 'var(--color-text-secondary)' }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const connectedProviders = user.providers || [];
+  const hasGoogle = connectedProviders.some(p => p?.name === 'google');
+  const hasFacebook = connectedProviders.some(p => p?.name === 'facebook');
 
   const handleLinkProvider = async (provider) => {
     try {

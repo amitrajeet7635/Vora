@@ -23,6 +23,32 @@ export const authApi = {
     return data.user; // Extract user object from response
   },
 
+  // Facebook login with access token
+  facebookLogin: async (facebookResponse) => {
+    const response = await fetch(`${API_URL}/api/auth/facebook/verify`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        accessToken: facebookResponse.accessToken,
+        userID: facebookResponse.userID,
+        email: facebookResponse.email,
+        name: facebookResponse.name,
+        picture: facebookResponse.picture,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Facebook login failed');
+    }
+
+    const data = await response.json();
+    return data.user;
+  },
+
   // Logout
   logout: async () => {
     const response = await fetch(`${API_URL}/api/auth/logout`, {

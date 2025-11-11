@@ -19,10 +19,16 @@
   --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.08);
   
   /* OAuth Button Colors - Light Mode */
-  --color-google: #4285F4;
-  --color-google-hover: #357ae8;
-  --color-facebook: #4285F4;
-  --color-facebook-hover: #357ae8;
+  --color-google: #FFFFFF;
+  --color-google-hover: #4285F4;
+  --color-google-border: #E2E8F0;
+  --color-google-text: #1E293B;
+  --color-google-text-hover: #FFFFFF;
+  --color-facebook: #FFFFFF;
+  --color-facebook-hover: #1877F2;
+  --color-facebook-border: #E2E8F0;
+  --color-facebook-text: #1E293B;
+  --color-facebook-text-hover: #FFFFFF;
 }
 
 /* Dark Mode */
@@ -42,10 +48,16 @@
   color-scheme: dark;
   
   /* OAuth Button Colors - Dark Mode */
-  --color-google: #00C9A7;
-  --color-google-hover: #00B396;
-  --color-facebook: #00C9A7;
-  --color-facebook-hover: #00B396;
+  --color-google: #FFFFFF;
+  --color-google-hover: #4285F4;
+  --color-google-border: #4B5563;
+  --color-google-text: #F9FAFB;
+  --color-google-text-hover: #FFFFFF;
+  --color-facebook: #FFFFFF;
+  --color-facebook-hover: #1877F2;
+  --color-facebook-border: #4B5563;
+  --color-facebook-text: #F9FAFB;
+  --color-facebook-text-hover: #FFFFFF;
 }
 
 body {
@@ -129,6 +141,120 @@ svg {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Facebook Login Button - Override default styles */
+.kep-login-facebook,
+.facebook-login-custom {
+  background-color: var(--color-facebook) !important;
+  border: 2px solid var(--color-facebook-border) !important;
+  color: var(--color-facebook-text) !important;
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  position: relative !important;
+  padding-left: 3rem !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Add Facebook icon using CSS */
+.kep-login-facebook::before,
+.facebook-login-custom::before {
+  content: '';
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%231877F2' d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.kep-login-facebook:hover:not(:disabled),
+.kep-login-facebook:hover,
+.facebook-login-custom:hover:not(:disabled),
+.facebook-login-custom:hover {
+  background-color: var(--color-facebook-hover) !important;
+  border-color: var(--color-facebook-hover) !important;
+  color: var(--color-facebook-text-hover) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Facebook icon changes to white on hover */
+.kep-login-facebook:hover::before,
+.facebook-login-custom:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z'/%3E%3C/svg%3E");
+}
+
+.kep-login-facebook:active:not(:disabled),
+.kep-login-facebook:active,
+.facebook-login-custom:active:not(:disabled),
+.facebook-login-custom:active {
+  transform: scale(0.98) !important;
+}
+
+/* Facebook icon styling - ensure it's visible */
+.kep-login-facebook svg,
+.facebook-login-custom svg {
+  fill: var(--color-facebook-text) !important;
+  color: var(--color-facebook-text) !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: inline-block !important;
+  margin-right: 8px !important;
+  transition: fill 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.kep-login-facebook:hover svg,
+.facebook-login-custom:hover svg {
+  fill: white !important;
+  color: white !important;
+}
+
+.kep-login-facebook svg path,
+.facebook-login-custom svg path {
+  fill: var(--color-facebook-text) !important;
+  transition: fill 0.2s ease-in-out;
+}
+
+.kep-login-facebook:hover svg path,
+.facebook-login-custom:hover svg path {
+  fill: white !important;
+}
+
+/* Hide default Facebook icon if library adds one */
+.kep-login-facebook i,
+.facebook-login-custom i {
+  color: var(--color-facebook-text) !important;
+  font-size: 20px !important;
+  margin-right: 8px !important;
+  transition: color 0.2s ease-in-out;
+}
+
+.kep-login-facebook:hover i,
+.facebook-login-custom:hover i {
+  color: white !important;
+}
+
+/* Google and Facebook icon transitions */
+.google-icon path,
+.facebook-icon path {
+  transition: fill 0.2s ease-in-out;
+}
+
+/* Google button hover - icons turn white */
+button:hover .google-icon path {
+  fill: white !important;
+}
+
+/* Facebook button hover - icons turn white */
+button:hover .facebook-icon path {
+  fill: white !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

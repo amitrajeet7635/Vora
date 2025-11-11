@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   initiateGoogleLogin,
   initiateFacebookLogin,
+  verifyFacebookToken,
   handleOAuthCallback,
   logout,
   unlinkProvider,
@@ -18,6 +19,9 @@ const { authLimiter } = require('../middlewares/rateLimiter');
 // OAuth Login Initiation Routes (with rate limiting)
 router.get('/google', authLimiter, initiateGoogleLogin);
 router.get('/facebook', authLimiter, initiateFacebookLogin);
+
+// Facebook client-side token verification
+router.post('/facebook/verify', authLimiter, verifyFacebookToken);
 
 // OAuth Callback Routes (dynamic provider parameter)
 router.get('/callback/:provider', authLimiter, handleOAuthCallback);

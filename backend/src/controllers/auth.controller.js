@@ -93,6 +93,157 @@ const initiateFacebookLogin = async (req, res, next) => {
 };
 
 /**
+ * Verify Facebook access token (client-side login)
+ * POST /api/auth/facebook/verify
+ */
+const verifyFacebookToken = async (req, res, next) => {
+  try {
+    const { accessToken, userID, email, name, picture } = req.body;
+
+    // Validate required fields
+    if (!accessToken || !userID) {
+      logger.logSecurityEvent('MISSING_FACEBOOK_TOKEN_DATA', {
+        hasAccessToken: !!accessToken,
+        hasUserID: !!userID,
+        correlationId: req.correlationId,
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required Facebook token data',
+      });
+    }
+
+    // Verify the access token with Facebook Graph API
+    const response = await fetch(
+      `https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${config.oauth.facebook.appId}|${config.oauth.facebook.appSecret}`
+    );
+    
+    const tokenData = await response.json();
+
+    // Check if token is valid
+    if (!tokenData.data || !tokenData.data.is_valid) {
+      logger.logSecurityEvent('INVALID_FACEBOOK_TOKEN', {
+        userID,
+        correlationId: req.correlationId,
+      });
+
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid Facebook access token',
+      });
+    }
+
+    // Check if user_id matches
+    if (tokenData.data.user_id !== userID) {
+      logger.logSecurityEvent('FACEBOOK_USER_ID_MISMATCH', {
+        expectedUserID: userID,
+        actualUserID: tokenData.data.user_id,
+        correlationId: req.correlationId,
+      });
+
+      return res.status(401).json({
+        success: false,
+        message: 'User ID mismatch',
+      });
+    }
+
+    // Find or create user
+    let user = await User.findByProvider('facebook', userID);
+
+    if (!user) {
+      // Try to find user by email
+      user = await User.findOne({ email });
+
+      if (user) {
+        // Link Facebook to existing account
+        await user.linkProvider('facebook', userID);
+        logger.logAuthEvent('FACEBOOK_PROVIDER_LINKED', {
+          userId: user._id,
+          email,
+          correlationId: req.correlationId,
+        });
+      } else {
+        // Create new user
+        user = await User.create({
+          email,
+          name: name,
+          avatar: picture?.data?.url || null,
+          providers: [
+            {
+              name: 'facebook',
+              providerId: userID,
+            },
+          ],
+        });
+
+        logger.logAuthEvent('USER_CREATED_FACEBOOK', {
+          userId: user._id,
+          email,
+          correlationId: req.correlationId,
+        });
+      }
+    } else {
+      // Update user profile if needed
+      if (picture?.data?.url && user.avatar !== picture.data.url) {
+        user.avatar = picture.data.url;
+        await user.save();
+      }
+    }
+
+    // Generate session and tokens
+    const sessionId = generateSessionId();
+    const payload = createTokenPayload(user, sessionId);
+
+    const jwtAccessToken = generateAccessToken(payload);
+    const jwtRefreshToken = generateRefreshToken(payload);
+
+    // Add session to user
+    const tokenExpiry = getTokenExpiration(config.jwt.refreshExpiresIn);
+    await user.addSession(
+      sessionId,
+      tokenExpiry,
+      req.headers['user-agent'],
+      req.ip
+    );
+
+    // Set cookies
+    setAccessTokenCookie(res, jwtAccessToken);
+    setRefreshTokenCookie(res, jwtRefreshToken);
+
+    logger.logAuthEvent('FACEBOOK_LOGIN_SUCCESS', {
+      userId: user._id,
+      email: user.email,
+      sessionId,
+      correlationId: req.correlationId,
+    });
+
+    res.json({
+      success: true,
+      message: 'Facebook login successful',
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+        providers: user.providers.map((p) => ({
+          name: p.name,
+          linkedAt: p.linkedAt,
+        })),
+      },
+    });
+  } catch (error) {
+    logger.error({
+      message: 'Failed to verify Facebook token',
+      error: error.message,
+      stack: error.stack,
+      correlationId: req.correlationId,
+    });
+    next(error);
+  }
+};
+
+/**
  * Handle OAuth callback
  * GET /api/auth/callback/:provider
  */
@@ -400,6 +551,7 @@ const unlinkProvider = async (req, res, next) => {
 module.exports = {
   initiateGoogleLogin,
   initiateFacebookLogin,
+  verifyFacebookToken,
   handleOAuthCallback,
   logout,
   unlinkProvider,
