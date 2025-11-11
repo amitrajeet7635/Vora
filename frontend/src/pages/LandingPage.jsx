@@ -6,7 +6,7 @@ import { ThemeToggleButton } from '../components/atoms/ThemeToggleButton';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 import voraLogo from '../assets/vora-logo.png';
 
 // Google Icon SVG - Colorful version for white background
@@ -150,17 +150,24 @@ export const LandingPage = () => {
             {/* Facebook Login Component */}
             <FacebookLogin
               appId={import.meta.env.VITE_FACEBOOK_APP_ID || ""}
-              autoLoad={false}
-              fields="name,email,picture"
-              callback={handleFacebookCallback}
-              icon="fa-facebook"
-              textButton={fbLoading ? "Signing in..." : "Continue with Facebook"}
-              cssClass="w-full h-12 px-6 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 cursor-pointer facebook-login-custom"
-              style={{
-                opacity: fbLoading ? 0.7 : 1,
-                fontFamily: 'inherit',
+              onSuccess={handleFacebookCallback}
+              onFail={(error) => {
+                console.error('Facebook login failed:', error);
+                alert('Facebook login failed. Please try again.');
               }}
-              disabled={fbLoading}
+              fields="name,email,picture"
+              render={({ onClick, logout }) => (
+                <Button
+                  variant="facebook"
+                  size="lg"
+                  icon={FacebookIcon}
+                  onClick={onClick}
+                  disabled={fbLoading}
+                  className="w-full"
+                >
+                  {fbLoading ? "Signing in..." : "Continue with Facebook"}
+                </Button>
+              )}
             />
           </motion.div>
         </motion.div>
