@@ -45,7 +45,7 @@ export const Navbar = () => {
 
             {/* GitHub Link - Hidden on mobile */}
             <a
-              href="https://github.com"
+              href="https://github.com/amitrajeet7635/Vora"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:block p-2 rounded-lg transition-colors"

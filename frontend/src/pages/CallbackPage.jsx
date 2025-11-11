@@ -32,11 +32,19 @@ export const CallbackPage = () => {
 
       if (successParam === 'true') {
         try {
+          // Add a small delay to ensure cookies are set after OAuth redirect
+          // This helps prevent race conditions where cookies haven't propagated yet
+          await new Promise(resolve => setTimeout(resolve, 200));
+          
           await refreshUser();
           showToast('Successfully logged in!', 'success');
           setTimeout(() => navigate('/dashboard'), 1000);
         } catch (err) {
-          setError('Failed to fetch user data');
+          console.error('OAuth callback error:', err);
+          const errorMessage = err.message === 'Not authenticated' 
+            ? 'Authentication failed. Cookies may not be set properly.' 
+            : 'Failed to fetch user data';
+          setError(errorMessage);
           showToast('Login failed. Please try again.', 'error');
           setTimeout(() => navigate('/'), 3000);
         }

@@ -2,25 +2,45 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 export const authApi = {
-  // Get user profile
-  getProfile: async () => {
-    const response = await fetch(`${API_URL}/api/user/me`, {
-      method: 'GET',
-      credentials: 'include', // Include cookies
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  // Get user profile with retry logic for OAuth callback scenarios
+  getProfile: async (retries = 2, delay = 300) => {
+    let lastError;
+    
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const response = await fetch(`${API_URL}/api/user/me`, {
+          method: 'GET',
+          credentials: 'include', // Include cookies
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('Not authenticated');
+        if (!response.ok) {
+          if (response.status === 401) {
+            // If this is not the last attempt and we get 401, retry after delay
+            if (attempt < retries) {
+              await new Promise(resolve => setTimeout(resolve, delay));
+              continue;
+            }
+            throw new Error('Not authenticated');
+          }
+          throw new Error('Failed to fetch profile');
+        }
+
+        const data = await response.json();
+        return data.user; // Extract user object from response
+      } catch (error) {
+        lastError = error;
+        // If not the last attempt, wait before retrying
+        if (attempt < retries) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
       }
-      throw new Error('Failed to fetch profile');
     }
-
-    const data = await response.json();
-    return data.user; // Extract user object from response
+    
+    // All retries failed, throw the last error
+    throw lastError;
   },
 
   // Facebook login with access token

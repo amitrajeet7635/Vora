@@ -180,7 +180,7 @@ export const LandingPage = () => {
           </a>
           <span className="hidden sm:inline">•</span>
           <a
-            href="https://github.com"
+            href="https://github.com/amitrajeet7635/Vora"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 transition-colors"
