@@ -42,6 +42,8 @@ export const LandingPage = () => {
   };
 
   const handleFacebookCallback = async (response) => {
+    console.log('Facebook response received:', response);
+    
     // Check if user cancelled or error occurred
     if (response?.status === "unknown") {
       console.error('Facebook login cancelled or failed');
@@ -60,7 +62,31 @@ export const LandingPage = () => {
     
     try {
       setFbLoading(true);
-      await loginWithFacebook(response);
+      
+      // Fetch additional user info from Facebook Graph API if not included
+      let userData = { ...response };
+      
+      // If email or name is missing, fetch from Graph API
+      if (!response.email || !response.name) {
+        try {
+          const graphResponse = await fetch(
+            `https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=${response.accessToken}`
+          );
+          const graphData = await graphResponse.json();
+          userData = {
+            ...userData,
+            email: graphData.email || response.email,
+            name: graphData.name || response.name,
+            picture: graphData.picture || response.picture,
+          };
+          console.log('Fetched additional user data from Graph API:', graphData);
+        } catch (graphError) {
+          console.error('Error fetching from Graph API:', graphError);
+          // Continue with original response data
+        }
+      }
+      
+      await loginWithFacebook(userData);
       console.log('Backend verification successful!');
       // Navigation will happen automatically via useEffect when isAuthenticated changes
     } catch (error) {
@@ -156,6 +182,7 @@ export const LandingPage = () => {
                 alert('Facebook login failed. Please try again.');
               }}
               fields="name,email,picture"
+              scope="public_profile,email"
               render={({ onClick, logout }) => (
                 <Button
                   variant="facebook"

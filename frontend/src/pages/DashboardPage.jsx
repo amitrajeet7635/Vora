@@ -5,12 +5,33 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/molecules/Toast';
 import { Button } from '../components/atoms/Button';
 import { Navbar } from '../components/organisms/Navbar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 export const DashboardPage = () => {
-  const { user, linkProvider, unlinkProvider, loading } = useAuth();
+  const { user, linkProvider, unlinkProvider, loading, refreshUser } = useAuth();
   const { showToast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [unlinking, setUnlinking] = useState(null);
+
+  // Handle linking success from Settings redirect
+  useEffect(() => {
+    const linked = searchParams.get('linked');
+    const error = searchParams.get('error');
+    const provider = searchParams.get('provider');
+    
+    if (linked) {
+      showToast(`${linked.charAt(0).toUpperCase() + linked.slice(1)} account linked successfully!`, 'success');
+      // Refresh user data to show the updated connected accounts
+      refreshUser();
+      // Clear the URL params
+      setSearchParams({});
+    } else if (error === 'link_failed' && provider) {
+      showToast(`Failed to link ${provider.charAt(0).toUpperCase() + provider.slice(1)} account. Please try again.`, 'error');
+      // Clear the URL params
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams, showToast, refreshUser]);
 
   // Show loading state while user data is being fetched
   if (loading || !user) {

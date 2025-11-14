@@ -148,27 +148,72 @@ const verifyFacebookToken = async (req, res, next) => {
       });
     }
 
+    // If email or name is missing, fetch from Facebook Graph API
+    let userEmail = email;
+    let userName = name;
+    let userPicture = picture;
+
+    if (!userEmail || !userName) {
+      try {
+        const profileResponse = await fetch(
+          `https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=${accessToken}`
+        );
+        const profileData = await profileResponse.json();
+        
+        userEmail = profileData.email || userEmail;
+        userName = profileData.name || userName;
+        userPicture = profileData.picture || userPicture;
+        
+        logger.info({
+          message: 'Fetched additional Facebook profile data',
+          hasEmail: !!userEmail,
+          hasName: !!userName,
+          correlationId: req.correlationId,
+        });
+      } catch (graphError) {
+        logger.error({
+          message: 'Failed to fetch Facebook profile data',
+          error: graphError.message,
+          correlationId: req.correlationId,
+        });
+      }
+    }
+
+    // Validate we now have required fields
+    if (!userEmail || !userName) {
+      logger.logSecurityEvent('FACEBOOK_MISSING_REQUIRED_FIELDS', {
+        hasEmail: !!userEmail,
+        hasName: !!userName,
+        correlationId: req.correlationId,
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: 'Could not retrieve email or name from Facebook. Please ensure you granted the necessary permissions.',
+      });
+    }
+
     // Find or create user
     let user = await User.findByProvider('facebook', userID);
 
     if (!user) {
       // Try to find user by email
-      user = await User.findOne({ email });
+      user = await User.findOne({ email: userEmail });
 
       if (user) {
         // Link Facebook to existing account
         await user.linkProvider('facebook', userID);
         logger.logAuthEvent('FACEBOOK_PROVIDER_LINKED', {
           userId: user._id,
-          email,
+          email: userEmail,
           correlationId: req.correlationId,
         });
       } else {
         // Create new user
         user = await User.create({
-          email,
-          name: name,
-          avatar: picture?.data?.url || null,
+          email: userEmail,
+          name: userName,
+          avatar: userPicture?.data?.url || null,
           providers: [
             {
               name: 'facebook',
@@ -179,15 +224,30 @@ const verifyFacebookToken = async (req, res, next) => {
 
         logger.logAuthEvent('USER_CREATED_FACEBOOK', {
           userId: user._id,
-          email,
+          email: userEmail,
           correlationId: req.correlationId,
         });
       }
     } else {
-      // Update user profile if needed
-      if (picture?.data?.url && user.avatar !== picture.data.url) {
-        user.avatar = picture.data.url;
+      // Update existing user's profile information from Facebook
+      let profileUpdated = false;
+      
+      if (userPicture?.data?.url && user.avatar !== userPicture.data.url) {
+        user.avatar = userPicture.data.url;
+        profileUpdated = true;
+      }
+      
+      if (userName && user.name !== userName) {
+        user.name = userName;
+        profileUpdated = true;
+      }
+      
+      if (profileUpdated) {
         await user.save();
+        logger.logAuthEvent('PROFILE_UPDATED_FROM_FACEBOOK', {
+          userId: user._id,
+          correlationId: req.correlationId,
+        });
       }
     }
 
@@ -368,6 +428,28 @@ const handleOAuthCallback = async (req, res, next) => {
           correlationId: req.correlationId,
         });
       }
+    } else {
+      // Update existing user's profile information from OAuth provider
+      let profileUpdated = false;
+      
+      if (profile.avatar && user.avatar !== profile.avatar) {
+        user.avatar = profile.avatar;
+        profileUpdated = true;
+      }
+      
+      if (profile.name && user.name !== profile.name) {
+        user.name = profile.name;
+        profileUpdated = true;
+      }
+      
+      if (profileUpdated) {
+        await user.save();
+        logger.logAuthEvent('PROFILE_UPDATED_FROM_OAUTH', {
+          userId: user._id,
+          provider,
+          correlationId: req.correlationId,
+        });
+      }
     }
 
     // Update last login
@@ -446,17 +528,35 @@ const handleAccountLinking = async (
     // Link provider
     await user.linkProvider(provider, profile.providerId);
 
+    // Update user profile with information from the linked provider if not already set
+    let profileUpdated = false;
+    
+    if (profile.avatar && !user.avatar) {
+      user.avatar = profile.avatar;
+      profileUpdated = true;
+    }
+    
+    if (profile.name && !user.name) {
+      user.name = profile.name;
+      profileUpdated = true;
+    }
+    
+    if (profileUpdated) {
+      await user.save();
+    }
+
     logger.logAuthEvent('LINK_ACCOUNT', {
       userId: user._id,
       provider,
       email: profile.email,
+      profileUpdated,
       correlationId: req.correlationId,
     });
 
     // Clean up PKCE session
     deletePKCESession(state);
 
-    res.redirect(`${config.frontend.url}/settings?linked=${provider}`);
+    res.redirect(`${config.frontend.url}/dashboard?linked=${provider}`);
   } catch (error) {
     logger.error({
       message: 'Account linking failed',
@@ -466,7 +566,7 @@ const handleAccountLinking = async (
 
     deletePKCESession(state);
     res.redirect(
-      `${config.frontend.url}/settings?error=link_failed&provider=${provider}`
+      `${config.frontend.url}/dashboard?error=link_failed&provider=${provider}`
     );
   }
 };
