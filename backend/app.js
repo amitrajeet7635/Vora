@@ -95,6 +95,40 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Environment Debug Route (only show in production for troubleshooting)
+app.get('/api/debug/env', (req, res) => {
+  // Only show which env vars are set, not their values (security)
+  const envStatus = {
+    NODE_ENV: !!process.env.NODE_ENV,
+    PORT: !!process.env.PORT,
+    MONGODB_URI: !!process.env.MONGODB_URI,
+    JWT_SECRET: !!process.env.JWT_SECRET,
+    FRONTEND_URL: process.env.FRONTEND_URL || 'NOT SET',
+    GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: !!process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL || 'NOT SET',
+    FACEBOOK_APP_ID: !!process.env.FACEBOOK_APP_ID,
+    FACEBOOK_APP_SECRET: !!process.env.FACEBOOK_APP_SECRET,
+    FACEBOOK_CALLBACK_URL: process.env.FACEBOOK_CALLBACK_URL || 'NOT SET',
+  };
+
+  res.json({
+    success: true,
+    message: 'Environment configuration status',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    envVarsConfigured: envStatus,
+    config: {
+      frontendUrl: config.frontend.url,
+      corsOrigin: config.cors.origin,
+      loginSuccessRedirect: config.frontend.loginSuccessRedirect,
+      loginFailureRedirect: config.frontend.loginFailureRedirect,
+      googleCallbackUrl: config.oauth.google.callbackUrl,
+      facebookCallbackUrl: config.oauth.facebook.callbackUrl,
+    },
+  });
+});
+
 // API Version Info
 app.get('/api', (req, res) => {
   res.json({

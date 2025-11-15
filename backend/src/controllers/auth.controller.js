@@ -27,6 +27,16 @@ const config = require('../config/env');
  */
 
 /**
+ * Helper function to build redirect URL with error parameter
+ * Handles cases where the redirect URL may already contain query params
+ */
+const buildErrorRedirectUrl = (error) => {
+  const failureRedirect = config.frontend.loginFailureRedirect;
+  const separator = failureRedirect.includes('?') ? '&' : '?';
+  return `${config.frontend.url}${failureRedirect}${separator}error=${error}`;
+};
+
+/**
  * Initiate Google OAuth flow
  * GET /api/auth/google
  */
@@ -322,9 +332,7 @@ const handleOAuthCallback = async (req, res, next) => {
         correlationId: req.correlationId,
       });
 
-      return res.redirect(
-        `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=${oauthError.error}`
-      );
+      return res.redirect(buildErrorRedirectUrl(oauthError.error));
     }
 
     // Validate required parameters
@@ -336,9 +344,7 @@ const handleOAuthCallback = async (req, res, next) => {
         correlationId: req.correlationId,
       });
 
-      return res.redirect(
-        `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=invalid_request`
-      );
+      return res.redirect(buildErrorRedirectUrl('invalid_request'));
     }
 
     // Retrieve PKCE session
@@ -350,9 +356,7 @@ const handleOAuthCallback = async (req, res, next) => {
         correlationId: req.correlationId,
       });
 
-      return res.redirect(
-        `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=invalid_state`
-      );
+      return res.redirect(buildErrorRedirectUrl('invalid_state'));
     }
 
     // Validate provider matches
@@ -364,9 +368,7 @@ const handleOAuthCallback = async (req, res, next) => {
       });
 
       deletePKCESession(state);
-      return res.redirect(
-        `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=provider_mismatch`
-      );
+      return res.redirect(buildErrorRedirectUrl('provider_mismatch'));
     }
 
     // Get OAuth service
@@ -498,9 +500,7 @@ const handleOAuthCallback = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
-    res.redirect(
-      `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=authentication_failed`
-    );
+    res.redirect(buildErrorRedirectUrl('authentication_failed'));
   }
 };
 
@@ -520,9 +520,7 @@ const handleAccountLinking = async (
 
     if (!user) {
       deletePKCESession(state);
-      return res.redirect(
-        `${config.frontend.url}${config.frontend.loginFailureRedirect}?error=user_not_found`
-      );
+      return res.redirect(buildErrorRedirectUrl('user_not_found'));
     }
 
     // Link provider

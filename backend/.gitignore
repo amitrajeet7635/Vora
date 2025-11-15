@@ -59,3 +59,4 @@ uploads/
 
 # Documentation
 docs/build/
+.vercel
