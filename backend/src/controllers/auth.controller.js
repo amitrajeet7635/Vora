@@ -493,11 +493,27 @@ const handleOAuthCallback = async (req, res, next) => {
     // Redirect to frontend
     res.redirect(`${config.frontend.url}${config.frontend.loginSuccessRedirect}`);
   } catch (error) {
+    // Enhanced error logging for debugging production issues
     logger.error({
       message: 'OAuth callback error',
       error: error.message,
+      errorName: error.name,
       stack: error.stack,
+      provider: req.params.provider,
       correlationId: req.correlationId,
+      mongooseConnection: require('mongoose').connection.readyState, // 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+      envCheck: {
+        hasMongoUri: !!process.env.MONGODB_URI,
+        hasFrontendUrl: !!process.env.FRONTEND_URL,
+        nodeEnv: process.env.NODE_ENV,
+      }
+    });
+    
+    // Log to console for Vercel logs
+    console.error('OAuth callback failed:', {
+      error: error.message,
+      provider: req.params.provider,
+      mongoState: require('mongoose').connection.readyState,
     });
 
     res.redirect(buildErrorRedirectUrl('authentication_failed'));

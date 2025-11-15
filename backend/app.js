@@ -97,6 +97,8 @@ app.get('/health', (req, res) => {
 
 // Environment Debug Route (only show in production for troubleshooting)
 app.get('/api/debug/env', (req, res) => {
+  const mongoose = require('mongoose');
+  
   // Only show which env vars are set, not their values (security)
   const envStatus = {
     NODE_ENV: !!process.env.NODE_ENV,
@@ -111,6 +113,14 @@ app.get('/api/debug/env', (req, res) => {
     FACEBOOK_APP_SECRET: !!process.env.FACEBOOK_APP_SECRET,
     FACEBOOK_CALLBACK_URL: process.env.FACEBOOK_CALLBACK_URL || 'NOT SET',
   };
+  
+  // Database connection state
+  const dbState = {
+    readyState: mongoose.connection.readyState,
+    readyStateText: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState],
+    host: mongoose.connection.host || 'not connected',
+    name: mongoose.connection.name || 'not connected',
+  };
 
   res.json({
     success: true,
@@ -118,6 +128,7 @@ app.get('/api/debug/env', (req, res) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
     envVarsConfigured: envStatus,
+    database: dbState,
     config: {
       frontendUrl: config.frontend.url,
       corsOrigin: config.cors.origin,
