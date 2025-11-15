@@ -22,6 +22,8 @@ export const CallbackPage = () => {
       hasHandledCallback.current = true;
       const errorParam = searchParams.get('error');
       const successParam = searchParams.get('success');
+      const accessToken = searchParams.get('access_token');
+      const refreshToken = searchParams.get('refresh_token');
 
       if (errorParam) {
         setError(decodeURIComponent(errorParam));
@@ -32,6 +34,16 @@ export const CallbackPage = () => {
 
       if (successParam === 'true') {
         try {
+          // Store tokens from URL (fallback for browsers that block third-party cookies)
+          if (accessToken) {
+            localStorage.setItem('vora_access_token', decodeURIComponent(accessToken));
+            console.log('✅ Stored access token from URL');
+          }
+          if (refreshToken) {
+            localStorage.setItem('vora_refresh_token', decodeURIComponent(refreshToken));
+            console.log('✅ Stored refresh token from URL');
+          }
+          
           // Add a small delay to ensure cookies are set after OAuth redirect
           // This helps prevent race conditions where cookies haven't propagated yet
           await new Promise(resolve => setTimeout(resolve, 200));

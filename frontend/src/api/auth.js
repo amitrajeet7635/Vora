@@ -8,12 +8,21 @@ export const authApi = {
     
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
+        // Build headers - include Authorization if token exists in localStorage
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+        
+        // Try localStorage token first (for browsers that block third-party cookies)
+        const token = localStorage.getItem('vora_access_token');
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
         const response = await fetch(`${API_URL}/api/user/me`, {
           method: 'GET',
-          credentials: 'include', // Include cookies
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          credentials: 'include', // Still include cookies as fallback
+          headers,
         });
 
         if (!response.ok) {
@@ -71,13 +80,24 @@ export const authApi = {
 
   // Logout
   logout: async () => {
+    const token = localStorage.getItem('vora_access_token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
+
+    // Clear localStorage tokens
+    localStorage.removeItem('vora_access_token');
+    localStorage.removeItem('vora_refresh_token');
 
     if (!response.ok) {
       throw new Error('Logout failed');
@@ -88,12 +108,19 @@ export const authApi = {
 
   // Unlink provider
   unlinkProvider: async (provider) => {
+    const token = localStorage.getItem('vora_access_token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/api/auth/unlink/${provider}`, {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -106,12 +133,19 @@ export const authApi = {
 
   // Update profile
   updateProfile: async (data) => {
+    const token = localStorage.getItem('vora_access_token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const response = await fetch(`${API_URL}/api/user/me`, {
       method: 'PATCH',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(data),
     });
 

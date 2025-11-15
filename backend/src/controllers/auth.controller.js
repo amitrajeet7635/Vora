@@ -502,8 +502,10 @@ const handleOAuthCallback = async (req, res, next) => {
       correlationId: req.correlationId,
     });
 
-    // Redirect to frontend
-    res.redirect(`${config.frontend.url}${config.frontend.loginSuccessRedirect}`);
+    // Redirect to frontend with tokens as fallback for browsers that block cookies
+    // This is needed for Brave and other privacy-focused browsers
+    const redirectUrl = `${config.frontend.url}${config.frontend.loginSuccessRedirect}&access_token=${encodeURIComponent(accessToken)}&refresh_token=${encodeURIComponent(refreshToken)}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     // Enhanced error logging for debugging production issues
     logger.error({
