@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const mongoose = require('mongoose');
 const googleOAuthService = require('../services/googleOAuth.service');
 const facebookOAuthService = require('../services/facebookOAuth.service');
 const {
@@ -319,6 +320,17 @@ const verifyFacebookToken = async (req, res, next) => {
  */
 const handleOAuthCallback = async (req, res, next) => {
   try {
+    // Verify database connection is ready
+    if (mongoose.connection.readyState !== 1) {
+      logger.error({
+        message: 'Database not connected in OAuth callback',
+        readyState: mongoose.connection.readyState,
+        correlationId: req.correlationId,
+      });
+      
+      return res.redirect(buildErrorRedirectUrl('service_unavailable'));
+    }
+
     const { provider } = req.params;
     const { code, state, error, error_description } = req.query;
 
